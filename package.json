@@ -1,6 +1,6 @@
 {
   "name": "atlastk-java",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Claude SIMON (http://q37.info/contact/)",
   "description": "Java package to handle web frontends",
   "main": "Atlas.js",
