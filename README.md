@@ -5,7 +5,7 @@ The *Atlas* toolkit is a library for web and desktop UI. This is the *Java* bind
 
 ## *Hello World!*
 
-![Little demonstration](http://q37.info/download/Hello.gif "A basic example")
+[![Little demonstration](http://q37.info/download/Hello.gif "A basic example")](http://q37.info/s/atk/Hello/)
 
 ### *Java* source code
 
