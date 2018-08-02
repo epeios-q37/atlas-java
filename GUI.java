@@ -19,5 +19,6 @@
 
 package info.q37.atlas;
 
-public class Tree extends info.q37.xdhq.Tree {
+public enum GUI {
+	NONE, DESKTOP, WEB, DESKTOP_AND_WEB, DEFAULT
 };

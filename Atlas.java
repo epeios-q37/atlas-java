@@ -19,11 +19,13 @@
 
 package info.q37.atlas;
 
+import info.q37.xdhq.MODE;
+
 public abstract class Atlas implements Runnable {
 	private DOM dom;
 
 	public Atlas() {
-		this.dom = new DOM();
+		this.dom = new DOM( info.q37.xdhq.XDH.getMode() );
 		new Thread( this ).start();
 	}
 
@@ -31,7 +33,7 @@ public abstract class Atlas implements Runnable {
 
 	@Override
 	public final void run() {
-		info.q37.xdhq.Event event = new info.q37.xdhq.Event();
+		info.q37.xdhq.dom.Event event = new info.q37.xdhq.dom.Event();
 		for (;;) {
 			dom.getAction(event);
 
@@ -39,8 +41,12 @@ public abstract class Atlas implements Runnable {
 		}
 	}
 
-	private static boolean isDev() {
-		return System.getenv("EPEIOS_SRC") != null;
+	public static boolean isDev() {
+		return info.q37.xdhq.XDH.isDev();
+	}
+
+	public String readAsset( String path ) {
+		return info.q37.xdhq.XDH.readAsset( path );
 	}
 
 	private static void launchWeb(String dir) {
@@ -87,58 +93,80 @@ public abstract class Atlas implements Runnable {
 		}
 	}
 
-	public enum Type {
-		DEFAULT, DESKTOP, WEB, DESKTOP_AND_WEB
-	};
+	private static final GUI getDefaultGUI() {
+		if ( isDev() )
+			return GUI.DESKTOP;
+		else
+			return GUI.WEB;
+	}
 
-	private static final Type defaultType = Type.DESKTOP;
+	private static final MODE getDefaultMODE() {
+		if ( isDev() )
+			return MODE.PROD;
+		else
+			return MODE.DEMO;
+	}
 
-	private static void launch(String newSessionAction, String dir, Type type, String arg) {
-		info.q37.xdhq.XDHq.launch(newSessionAction);
+	private static void launch(String newSessionAction, String dir, GUI gui, String arg) {
+		MODE mode = getDefaultMODE();
 
-		if (type == Type.DEFAULT) {
-			type = defaultType;
+		if (gui == GUI.DEFAULT) {
+			gui = getDefaultGUI();
 
 			if (arg.length() > 0) {
-				if ( arg.equals( "d" ) || arg.equals( "desktop" ) ) {
-					type = Type.DESKTOP;
+				if ( arg.equals( "n" ) || arg.equals( "none" ) ) {
+					gui = GUI.NONE;
+				} else if ( arg.equals( "d" ) || arg.equals( "desktop" ) ) {
+					gui = GUI.DESKTOP;
+				} else if ( arg.equals( "W" ) ) {
+					mode = MODE.DEMO;
+					gui = GUI.WEB;
 				} else if ( arg.equals( "w") || arg.equals( "web" ) ) {
-					type = Type.WEB;
+					gui = GUI.WEB;
 				} else if ( arg.equals( "dw" ) || arg.equals( "wd") ) {
-					type = Type.DESKTOP_AND_WEB;
+					gui = GUI.DESKTOP_AND_WEB;
 				} else {
-					System.out.println("Unknown type !");
+					System.out.println("Unknown gui $!");
 					System.exit(1);
 				}
 			}
 		}
 
-		switch (type) {
+		info.q37.xdhq.XDH.launch(newSessionAction, mode, dir);
+
+		switch (gui) {
+		case NONE:
+			break;
 		case DESKTOP:
 			launchDesktop(dir);
 			break;
 		case WEB:
-			launchWeb(dir);
+			if( mode != MODE.DEMO )
+				launchWeb(dir);
 			break;
 		case DESKTOP_AND_WEB:
 			launchDesktop(dir);
 			launchWeb(dir);
 			break;
 		default:
-			System.out.println("Unknown type !");
+			System.out.println("Unknown gui !");
 			System.exit(1);
 			break;
 		}
 	}
 
-	public static void launch(String newSessionAction, String dir, Type type, String[] args) {
+	public static void launch(String newSessionAction, String dir, GUI gui, String[] args) {
 		if (args.length > 0)
-			launch(newSessionAction, dir, type, args[0]);
+			launch(newSessionAction, dir, gui, args[0]);
 		else
-			launch(newSessionAction, dir, type, "");
+			launch(newSessionAction, dir, gui, "");
 	}
 
-	public static void launch(String newSessionAction, Type type) {
-		launch(newSessionAction, ".", type, "");
+	public static void launch(String newSessionAction, GUI gui) {
+		launch(newSessionAction, ".", gui, "");
+	}
+
+	public static void launch(String newSessionAction) {
+		launch(newSessionAction, ".", GUI.DEFAULT, "");
 	}
 };

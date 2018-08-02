@@ -2,7 +2,12 @@
 
 **Common to all bindings!**
 
+## 2018-08-02
+
+- upgrading to 0v.2.0,
+
 ## 2018-04-20
+
 - *atlas-java*
   - simplification,
 - all bindings:
