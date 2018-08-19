@@ -64,7 +64,7 @@ class Hello extends Atlas {
 - compile this file : `javac -cp Atlas.jar Hello.java`,
 - launch :
   - under *Windows* : `java -cp .;Atlas.jar Hello` (with semi-colon as *classpath* separator),
-  - under other platforms : `java -cp .:Atlas.jar Hello` ((with colon as *classpath* separator).
+  - under other platforms : `java -cp .:Atlas.jar Hello` (with colon as *classpath* separator).
 
 ## What's next ?
 
