@@ -2,13 +2,13 @@
 
 **Common to all bindings!**
 
+## 2018-09-03
+
+- upgrading to v.0.2.0,
+
 ## 2018-08-19
 
 - upgrading to v.0.1.9,
-
-## 2018-08-02
-
-- upgrading to v.0.1.9-b,
 
 ## 2018-04-20
 
