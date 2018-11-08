@@ -53,6 +53,10 @@ public abstract class Atlas implements Runnable {
 		return readAsset( path, "" );
 	}
 
+	static public XML createXML(String rootTag) {
+		return new XML(rootTag);
+	}
+
 	private static void launchWeb(String dir) {
 		try {
 			ProcessBuilder processBuilder;

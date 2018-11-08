@@ -1,4 +1,4 @@
-# *Java* binding of the *Atlas* toolkit
+# *Java* version of the *Atlas* toolkit
 
 ![Java logo](https://q37.info/download/assets/Java.png "Java")
 
@@ -7,6 +7,10 @@ The [*Atlas* toolkit](https://atlastk.org/) is a library which facilitates the p
 ## *Hello World!*
 
 ![Little demonstration](http://q37.info/download/assets/Hello.gif "A basic example")
+
+Online demonstration: <http://q37.info/runkit/Hello>.
+
+Source code:
 
 ```Java
 import info.q37.atlas.*;
@@ -63,17 +67,23 @@ class Hello extends Atlas {
 }
 ```
 
-- Get the `Atlas.jar` file (https://q37.info/download/assets/Atlas.jar),
+To install and run this example on your computer:
+
+- get the `Atlas.jar` file (https://q37.info/download/assets/Atlas.jar),
 - in the same directory, create a `Hello.java` file with above source code, or get it directly here : <https://q37.info/download/assets/Hello.java>,
 - compile this file : `javac -cp Atlas.jar Hello.java`,
 - launch :
   - under *Windows* : `java -cp .;Atlas.jar Hello` (with semi-colon as *classpath* separator),
   - under other platforms : `java -cp .:Atlas.jar Hello` (with colon as *classpath* separator).
 
+*NOTA*: you may have to give the full path for the *Java* compiler (`javac`), and may be for the *JVM* (`java`), if they are not in the [*PATH*](https://en.wikipedia.org/wiki/PATH_(variable)).
+
 ## What's next ?
 
 Here's how the *Atlas* toolkit version of the [*TodoMVC*](http://todomvc.com/) application looks like: 
 
 [![TodoMVC](http://q37.info/download/TodoMVC.gif "The TodoMVC application made with the Atlas toolkit")](https://github.com/epeios-q37/todomvc-java)
+
+Online demonstration: <http://q37.info/runkit/TodoMVC>.
 
 See <https://github.com/epeios-q37/todomvc-java>.
