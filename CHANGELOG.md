@@ -3,7 +3,24 @@
 - Common to **all** bindings,
 - does **not** concern the native code,
 
----
+## 2018-12-07
+
+- *Python*
+  - fixing `(set|remove)Attribute(…)` bug,
+- **ALL**:
+  - switching to new protocol and resetting version,
+  - switching to version 5.2,
+
+## 2018-11-24
+
+- *Node.js*:
+  - fixing error message displayed when not able to connect,
+
+## 2018-11-23
+
+- *Node.js* and *Python* bindings:
+  - fixing error in handling environment variables for proxy/web address/port,
+  - switching to version 0.5.1a,
 
 ## 2018-11-22
 
