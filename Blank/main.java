@@ -31,8 +31,9 @@ class Blank extends Atlas {
 		return readAsset( path, dir );
 	}
 
-	public void handle( DOM dom, String action, String id ) {
-		if ( action.equals( "Connect" ) ) {
+	@Override
+	public void handle(String action, String id ) {
+		if ( action.equals( "" ) ) {
 			dom.setLayout("",readAsset_( "Main.html") );
 			dom.addClass("Input", "hidden");
 		} else if ( action.equals( "Submit" ) ) {
@@ -56,7 +57,7 @@ class Blank extends Atlas {
 		else
 			dir = "blank";
 
-		launch("Connect", readAsset_("Head.html"), dir, GUI.DEFAULT, args);
+		launch(readAsset_("Head.html"), dir, GUI.DEFAULT, args);
 
 		for (;;) new Blank();
 	}
