@@ -26,51 +26,44 @@ import java.util.HashMap;
 
 class Hello extends Atlas {
 	private static String html = 
-		"<div class=\"vcenter-out\">" +
-		" <div class=\"vcenter-in\">" +
-		"  <fieldset>" +
-		"   <label>Name:</label>" +
+		"<div style=\"display: table; margin: 50px auto auto auto;\">" +
+		" <fieldset>" +
 		"   <input id=\"input\" maxlength=\"20\" placeholder=\"Enter a name here\"'" +
-		"	 type=\"text\" data-xdh-onevent=\"input|Typing\"/>" +
-		"   <button data-xdh-onevent=\"Clear\">Clear</button>" +
-		"   <hr/>" +
-		"   <h1>" +
-		"    <span>Hello </span>" +
-		"    <span style=\"font-style: italic;\" id=\"name\"></span>" +
-		"    <span>!</span>" +
-		"   </h1>" +
-		"  </fieldset>" +
-		" </div>" +
+		"	         type=\"text\" data-xdh-onevent=\"Submit\"/>" +
+		"   <div style=\"display: flex; justify-content: space-around; margin: 5px auto auto auto;\">" +
+		"    <button data-xdh-onevent=\"Submit\">Submit</button>" +
+		"    <button data-xdh-onevent=\"Clear\">Clear</button>" +
+		"  </div>" +
+		" </fieldset>" +
 		"</div>";
 
 	@Override
 	public void handle(String action, String id )
 	{
-		if ( "".equals( action ) ) {
-			dom.setLayout("", html);
-			dom.focus( "input");
-		} else if ("Typing".equals( action ) ) {
-			dom.setContent("name", dom.getContent(id));
-		} else if ( "Clear".equals( action ) ) {
+		switch( action) {
+		case "":
+			dom.setLayout("", html );
+			dom.setContent( "input", "World");
+			break;
+		case "Submit":
+			dom.alert("Hello, " + dom.getContent("input").trim() + "!" );
+			break;
+		case "Clear":
 			if ( dom.confirm( "Are you sure ?" ) )
-				dom.setContents( new HashMap<String,String> ()
-					{{ put( "input", ""); put( "name", ""); }} );
-		} else {
+				dom.setContent( "input", "");
+			break;
+		default:
 			throw new RuntimeException( "Unknown action '" + action + "' !!!");
 		}
+
+		dom.focus( "input");
 	}
+
 	public static void main(String[] args) throws Exception {
-		String head = 
+		String head =
 			"<title>\"Hello, World !\" example</title>" +
-			"<style type=\"text/css\">" +
-			" html, body { height: 100%; padding: 0; margin: 0; }" +
-			" .vcenter-out, .hcenter { display: table; height: 100%; margin: auto; }" +
-			" .vcenter-in { display: table-cell; vertical-align: middle; }" +
-			"</style>";
+			"<link rel=\"icon\" type=\"image/png\" href=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAMFBMVEUEAvyEhsxERuS8urQsKuycnsRkYtzc2qwUFvRUVtysrrx0ctTs6qTMyrSUksQ0NuyciPBdAAABHklEQVR42mNgwAa8zlxjDd2A4POfOXPmzZkFCAH2M8fNzyALzDlzg2ENssCbMwkMOsgCa858YOjBKxBzRoHhD7LAHiBH5swCT9HQ6A9ggZ4zp7YCrV0DdM6pBpAAG5Blc2aBDZA68wCsZPuZU0BDH07xvHOmAGKKvgMP2NA/Zw7ADIYJXGDgLQeBBSCBFu0aoAPYQUadMQAJAE29zwAVWMCWpgB08ZnDQGsbGhpsgCqBQHNfzRkDEIPlzFmo0T5nzoMovjPHoAK8Zw5BnA5yDosDSAVYQOYMKIDZzkoDzagAsjhqzjRAfXTmzAQgi/vMQZA6pjtAvhEk0E+ATWRRm6YBZuScCUCNN5szH1D4TGdOoSrggtiNAH3vBBjwAQCglIrSZkf1MQAAAABJRU5ErkJggg==\" />";
 
-		launch(head, "Hello", GUI.DEFAULT, args );
-
-		for (;;)
-			new Hello();
+		launch(() -> new Hello(), head, "Hello", GUI.DEFAULT, args );
 	}
 }

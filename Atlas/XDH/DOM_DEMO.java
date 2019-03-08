@@ -22,6 +22,7 @@ package info.q37.xdhq.dom;
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.locks.*;
 import java.awt.Desktop;
 
 public class DOM_DEMO extends DOM_SHRD {
@@ -31,10 +32,30 @@ public class DOM_DEMO extends DOM_SHRD {
 	static private String wPort = "";
 	static private String cgi = "xdh";
 	static private String token = "";
-	private Socket socket;
-	private boolean firstLaunch = true;
-	static private String protocolLabel = "3f0aef6b-b893-4ccd-9316-d468588fc572";
-	static private String protocolVersion = "0";
+	static private InputStream input_;
+	static private OutputStream output_;
+	// Both object are to block the switcher.
+	static private Lock lock_ = new ReentrantLock();
+	static private Condition condition_ = lock_.newCondition();;
+	static private String demoProtocolLabel = "877c913f-62df-40a1-bf5d-4bb5e66a6dd9";
+	static private String demoProtocolVersion = "0";
+	static private String mainProtocolLabel = "6e010737-31d8-4be3-9195-c5b5b2a9d5d9";
+	static private String mainProtocolVersion = "0";
+
+	private byte id_;
+	private boolean firstLaunch_ =  true;
+
+	static class Instance_ {
+		private boolean handshakeDone = false;
+		Lock lock = new ReentrantLock();
+		Condition condition = lock.newCondition();
+		Object userObject;	// Just to avoid that the GC destroys the object.
+		Instance_( Object object ) {
+			this.userObject = object;
+		}
+	}
+
+	static private Map<Byte, Instance_> instances_ = new HashMap<Byte, Instance_>();
 
 	static private String getEnv_(String name, String value) {
 		String env = System.getenv(name);
@@ -86,7 +107,11 @@ public class DOM_DEMO extends DOM_SHRD {
 			wPort = ":" + wPort;
 	}
 
-	private void writeSize_(int size, OutputStream stream) throws Exception {
+	private static void writeByte_( byte data) throws Exception {
+		output_.write( data );
+	}
+
+	private static void writeSize_(int size) throws Exception {
 		byte data[] = new byte[8];
 		int i = 7;
 
@@ -98,41 +123,42 @@ public class DOM_DEMO extends DOM_SHRD {
 			size >>= 7;
 		}
 
-		stream.write(data, i, 8 - i);
+		output_.write(data, i, 8 - i);
 	}
 
-	private void writeString_(String string, OutputStream stream) throws Exception {
+	private static void writeString_(String string) throws Exception {
 		byte bytes[] = string.getBytes();
 
-		writeSize_(bytes.length, stream);
-		stream.write(bytes);
+		writeSize_(bytes.length);
+		output_.write(bytes);
 	}
 
-	private void writeString_(String string) throws Exception {
-		writeString_(string, socket.getOutputStream());
-	}
-
-	private void writeStrings_(String[] strings, OutputStream stream) throws Exception {
+	private static void writeStrings_(String[] strings) throws Exception {
 		int size = strings.length;
 		int i = 0;
 
-		writeSize_(size, stream);
+		writeSize_(size);
 
 		while (i < size) {
-			writeString_(strings[i++], stream);
+			writeString_(strings[i++]);
 		}
 	}
 
-	private void writeStrings_(String[] strings) throws Exception {
-		writeStrings_(strings, socket.getOutputStream());
+	private static byte getByte_() throws Exception {
+		int data = input_.read();
+
+		if ( data == -1 )
+			throw new Exception( "EOF !!!");
+
+		return (byte)data;
 	}
 
-	private int getSize_(InputStreamReader reader) throws Exception {
-		int datum = reader.read();
+	private static int getSize_() throws Exception {
+		int datum = input_.read();
 		int size = datum & 0x7f;
 
 		while ((datum & 0x80) != 0) {
-			datum = reader.read();
+			datum = input_.read();
 
 			size = (size << 7) + (datum & 0x7f);
 		}
@@ -140,107 +166,200 @@ public class DOM_DEMO extends DOM_SHRD {
 		return size;
 	}
 
-	private String getString_(InputStreamReader reader) throws Exception {
+	private static String getString_() throws Exception {
 		String string = "";
-		int size = getSize_(reader);
+		int size = getSize_();
 
 		while (size-- != 0) {
-			string += (char) reader.read();
+			string += (char) input_.read();
 		}
 
 		return string;
 	}
 
-	private String getString_() throws Exception {
-		return getString_(new InputStreamReader(socket.getInputStream()));
-	}
-
-	private String[] getStrings_(InputStreamReader reader) throws Exception {
-		int size = getSize_(reader);
+	private static String[] getStrings_() throws Exception {
+		int size = getSize_();
 		int i = 0;
 
 		String[] strings = new String[size];
 
 		while (i < size)
-			strings[i++] = getString_(reader);
+			strings[i++] = getString_();
 
 		return strings;
 	}
 
-	private String[] getStrings_() throws Exception {
-		return getStrings_(new InputStreamReader(socket.getInputStream()));
-	}
+	private static void demoHandshake_() throws Exception {
+		String error, notification;
 
-	public DOM_DEMO() throws Exception {
-		try {
-			socket = new Socket(pAddr, pPort);
-		} catch (Exception e) {
-			System.out.println("Unable to connect to " + pAddr + ":" + pPort + " !!!");
+		writeString_( demoProtocolLabel );
+		writeString_( demoProtocolVersion );
+
+		output_.flush();
+
+		error = getString_();
+
+		if ( !error.isEmpty()) {
+			System.out.println(error);
 			System.exit(1);
 		}
 
-		OutputStream output = socket.getOutputStream();
-		InputStreamReader reader = new InputStreamReader(socket.getInputStream());
+		notification = getString_();
 
-		writeString_(token, output);
+		if ( !notification.isEmpty())
+			System.out.println(notification );
+	}
+
+	private static void ignition_() throws Exception {
+		writeString_(token);
+
+		writeString_(info.q37.xdhq.XDH_DEMO.headContent);
+		
+		output_.flush();
+
+		token = getString_();
 
 		if (isTokenEmpty_()) {
-			writeString_(info.q37.xdhq.XDH_DEMO.headContent);
+			System.out.println( getString_() );
+			System.exit(1);
 		}
 
-		output.flush();
+		if ( !":0".equals(wPort)) {
+			String url = "http://" + wAddr + wPort + "/" + cgi + ".php?_token=" + token;
 
-		if (isTokenEmpty_()) {
-			token = getString_(reader);
+			System.out.println(url);
+			char[] filler = new char[url.length()];
+			Arrays.fill(filler,'^');
+			System.out.println(filler);
+			System.out.println("Open above URL in a web browser. Enjoy!");
 
-			if (isTokenEmpty_())
-				throw new Exception("Invalid connection information !!!");
+			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+				Desktop.getDesktop().browse(new URI(url));
+			}
+		}
+	}
 
-			if ( !":0".equals(wPort)) {
-				String url = "http://" + wAddr + wPort + "/" + cgi + ".php?_token=" + token;
+	 private static void serve_(info.q37.xdhq.XDH_SHRD.Callback callback) {
+		try {
+			for (;;) {
+				byte id = getByte_();
 
-				System.out.println(url);
-				System.out.println("Open above URL in a web browser. Enjoy!");
+				if ( id == -1 ) {	// Value reporting a new front-end.
+					id = getByte_();	// The id of the new front-end.
 
-				if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-					Desktop.getDesktop().browse(new URI(url));
+					if ( instances_.containsKey( id )) {
+						throw new Exception( "Instance of id  '" + id + "' exists but should not !" );
+					}
+
+					synchronized( instances_ ) {
+						Object userObject = callback.callback();	//  from here, 'getAction()' could access the instance before being stored, hence the 'synchronized' .
+
+						instances_.put( id, new Instance_( userObject ) );
+
+						Object object1 = userObject.getClass().getField( "dom" ).get(userObject);
+
+						Object object2 = object1.getClass().getMethod( "getDOM", (Class [])null).invoke( object1 );
+					
+						object2.getClass().getMethod( "setId", new Class[]{Byte.class}).invoke( object2, id );
+					}
+
+					synchronized( output_) {
+						writeByte_( id );
+						writeString_( mainProtocolLabel );
+						writeString_( mainProtocolVersion );
+						output_.flush();
+					}
+				} else if ( !instances_.containsKey( id ) ) {
+						System.out.println( "Unknown instance of id '" + id + "'!" );
+						System.exit( -1 );
+				} else if ( !instances_.get(id).handshakeDone ) {
+						String error;
+
+						error = getString_();
+
+						if ( !error.isEmpty() ) {
+							System.out.println( error );
+							System.exit( -1 );
+						}
+					
+						getString_();	// Language. Ignored yet.
+
+						synchronized( output_) {
+							writeByte_( id );
+							writeString_("JRE");
+							output_.flush();
+						}
+
+						instances_.get(id).handshakeDone = true;
+				} else {
+					instances_.get(id).lock.lock();
+					instances_.get(id).condition.signal();
+					instances_.get(id).lock.unlock();
+
+					lock_.lock();
+					condition_.await();
+					lock_.unlock();
 				}
 			}
-		} else {
-			if (!getString_(reader).equals(token))
-				throw new Exception("Unmatched token !!!");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
 
-		writeString_(protocolLabel, output);
-		writeString_(protocolVersion, output);
-		output.flush();
+	static public void launch(info.q37.xdhq.XDH_SHRD.Callback callback) {
+		try {
+			try {
+				Socket socket = new Socket(pAddr, pPort);
+				input_ = socket.getInputStream();
+				output_ = socket.getOutputStream();
+			} catch (Exception e) {
+				System.out.println("Unable to connect to " + pAddr + ":" + pPort + " !!!");
+				System.exit(1);
+			}
 
-		String errorMessage = getString_(reader);
+			demoHandshake_();
 
-		if ( !"".equals(errorMessage))
-			throw new Exception(errorMessage);
+			ignition_();
 
-		getString_(reader);	// Language.
-		writeString_("JRE");
-		output.flush();
+			serve_(callback);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void getAction(Event event) {
 		try {
-			if (!firstLaunch) {
-				OutputStream output = socket.getOutputStream();
-				output.write(new String("StandBy_1").getBytes());
-				output.write(0);
-				output.flush();
+			if (!firstLaunch_) {
+				synchronized( output_ ) {
+					writeByte_(id_ );
+					output_.write(new String("StandBy_1").getBytes());
+					output_.write(0);
+					output_.flush();
+				}
 			} else
-				firstLaunch = false;
+				firstLaunch_ = false;
 
-			InputStreamReader reader = new InputStreamReader(socket.getInputStream());
+			Instance_ instance;
 
-			event.id = getString_(reader);
+			synchronized(instances_) {	// See 'serve_(...)'.
+				instance = instances_.get(id_);
+			}
 
-			event.action = getString_(reader);
+			instance.lock.lock();
+			instance.condition.await();
+
+			event.id = getString_();
+
+			event.action = getString_();
+
+			instance.lock.unlock();
+
+			lock_.lock();
+			condition_.signal();
+			lock_.unlock();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -251,44 +370,64 @@ public class DOM_DEMO extends DOM_SHRD {
 		Object object = null;
 
 		try {
-			OutputStream output = socket.getOutputStream();
-			int size = strings.length;
-			int i = 0;
+			synchronized( output_ ) {
+				int size = strings.length;
+				int i = 0;
 
-			output.write(new String(command).getBytes());
-			output.write(0);
+				writeByte_( id_ );
+				output_.write(new String(command).getBytes());
+				output_.write(0);
 
-			while (i < size) {
-				writeString_(strings[i++], output);
+				while (i < size) {
+					writeString_(strings[i++]);
+				}
+
+				size = xstrings.length;
+				i = 0;
+
+				while (i < size) {
+					writeStrings_(xstrings[i++]);
+				}
+
+				output_.flush();
 			}
 
-			size = xstrings.length;
-			i = 0;
-
-			while (i < size) {
-				writeStrings_(xstrings[i++], output);
-			}
-
-			output.flush();
-
-			InputStreamReader reader = new InputStreamReader(socket.getInputStream());
 
 			switch (type) {
 			case VOID:
 				break;
 			case STRING:
-				object = getString_(reader);
+				instances_.get(id_).lock.lock();
+				instances_.get(id_).condition.await();
+				object = getString_();
+				instances_.get(id_).lock.unlock();
+				lock_.lock();
+				condition_.signal();
+				lock_.unlock();
 				break;
 			case STRINGS:
-				object = getStrings_(reader);
+				instances_.get(id_).lock.lock();
+				instances_.get(id_).condition.await();
+				object = getStrings_();
+				instances_.get(id_).lock.unlock();
+				lock_.lock();
+				condition_.signal();
+				lock_.unlock();
 				break;
 			default:
 				throw new Exception("Unknown return type !!!");
 			}
+
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return object;
+	}
+
+	public void setId( Byte id ) {
+		id_ = id;
 	}
 }

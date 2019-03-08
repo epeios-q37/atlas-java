@@ -51,6 +51,10 @@ public class DOM {
 		}
 	}
 
+	public info.q37.xdhq.dom.DOM_SHRD getDOM() {
+		return DOM;
+	}
+
 	public void getAction(info.q37.xdhq.dom.Event event) {
 		DOM.getAction(event);
 	}
@@ -60,7 +64,9 @@ public class DOM {
 	}
 
 	public void alert(String message) {
-		DOM.call("Alert_1", Type.VOID, new String[] { message }, emptys);
+		DOM.call("Alert_1", Type.STRING, new String[] { message }, emptys);
+		// For the return value being 'STRING' instead of 'VOID',
+		// see the 'alert' primitive in 'XDHqXDH'.
 	}
 
 	public boolean confirm(String message) {
