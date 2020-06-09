@@ -19,10 +19,17 @@
 
 package info.q37.xdhq;
 
-public class XDH_DEMO extends XDH_SHRD {
-	static public String headContent;
-	static public void launch(String headContent, info.q37.xdhq.XDH_SHRD.Callback callback ) {
-		XDH_DEMO.headContent = headContent;
-		info.q37.xdhq.dom.DOM_DEMO.launch(callback);
+import info.q37.jreq.JRE;
+
+public class XDH_SLFH extends XDH_SHRD {
+	static private long launcher;
+	static {
+		launcher = JRE.register( "xdhq" );
+	}
+	static public Object call(int index, Object... objects) {
+		return JRE.call( launcher, index, objects );
+	}
+	static public void launch() {
+		JRE.call( launcher, 1, "53700" );
 	}
 }

@@ -26,12 +26,14 @@ public abstract class DOM_SHRD {
 	    private Type(int value) {
 			this.value = value;
 		}
-	    public int getValue() {
-			return value;
+	    public byte getValue() {
+			return (byte)value;
 		}
 	};
 
 	public abstract void getAction(Event event);
 
-	public abstract Object call(String command, Type type, String[] strings, String [][] xstrings );
+	public abstract Object call(String command, Type type, info.q37.xdhq.ARG ...args);
+
+	public abstract boolean isQuitting();
 }

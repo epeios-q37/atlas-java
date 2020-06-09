@@ -19,7 +19,7 @@
 
 package info.q37.xdhq;
 
-import info.q37.xdhq.XDH_PROD;
+import info.q37.xdhq.XDH_SLFH;
 import info.q37.xdhq.MODE;
 
 import java.nio.file.*;
@@ -39,11 +39,11 @@ public class XDH extends info.q37.jreq.JRE {
 		  return result;
 	}
 	public static boolean isDev() {
-		return System.getenv("EPEIOS_SRC") != null;
+		return System.getenv("Q37_EPEIOS") != null;
 	}
 	private static String getAssetPath_( String dir ) {
 		if ( isDev() )
-			return "h:/hg/epeios/tools/xdhq/examples/common/" + dir + "/";
+			return "/home/csimon/epeios/tools/xdhq/examples/common/" + dir + "/";
 		else
 			return "./";
 	}
@@ -58,12 +58,23 @@ public class XDH extends info.q37.jreq.JRE {
 		dir_ = dir;
 
 		switch ( mode ) {
-		case DEMO:
-			XDH_DEMO.launch(headContent,callback );
+		case FAAS:
+			XDH_FAAS.launch(headContent,callback );
 			break;
-		case PROD:
-			XDH_PROD.launch();
+		case SLFH:
+			XDH_SLFH.launch();
 			break;
+		default:
+			throw new RuntimeException( "Unknown mode !!!");
+		}
+	}
+	static public void broadcastAction(String action, String id) {
+		switch ( getMode() ) {
+		case FAAS:
+			XDH_FAAS.broadcastAction(action, id);
+			break;
+		case SLFH:
+			throw new RuntimeException( "To implement !!!");
 		default:
 			throw new RuntimeException( "Unknown mode !!!");
 		}
@@ -71,8 +82,8 @@ public class XDH extends info.q37.jreq.JRE {
 	static public MODE getMode() {
 		return mode_;
 	}
-	static public boolean isDEMO() {
-		return getMode() == MODE.DEMO;
+	static public boolean isFaaS() {
+		return getMode() == MODE.FAAS;
 	}
 	static public String getDir() {
 		return dir_;

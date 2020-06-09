@@ -37,8 +37,15 @@ public abstract class Atlas implements Runnable {
 		for (;;) {
 			dom.getAction(event);
 
+			if (dom.isQuitting() ) {	// MUST be called after 'getAction()…',
+										// or the library will hang!
+				break;
+			}
+
 			handle(event.action, event.id );
 		}
+		
+		// System.out.println("Quitting thread!");
 	}
 
 	public static boolean isDev() {
@@ -111,16 +118,16 @@ public abstract class Atlas implements Runnable {
 
 	private static final GUI getDefaultGUI() {
 		if ( isDev() )
-			return GUI.DESKTOP;
+			return GUI.NONE;
 		else
 			return GUI.WEB;
 	}
 
 	private static final MODE getDefaultMODE() {
 		if ( isDev() )
-			return MODE.PROD;
+			return MODE.FAAS;
 		else
-			return MODE.DEMO;
+			return MODE.FAAS;
 	}
 
 	private static void launch(info.q37.xdhq.XDH_SHRD.Callback callback, String headContent, String dir, GUI gui, String arg) {
@@ -135,7 +142,7 @@ public abstract class Atlas implements Runnable {
 				} else if ( arg.equals( "d" ) || arg.equals( "desktop" ) ) {
 					gui = GUI.DESKTOP;
 				} else if ( arg.equals( "W" ) ) {
-					mode = MODE.DEMO;
+					mode = MODE.FAAS;
 					gui = GUI.NONE;	// The httpd server is launched externally.
 				} else if ( arg.equals( "w") || arg.equals( "web" ) ) {
 					gui = GUI.WEB;
@@ -187,5 +194,13 @@ public abstract class Atlas implements Runnable {
 
 	public static void launch(info.q37.xdhq.XDH_SHRD.Callback callback) {
 		launch(callback, "");
+	}
+
+	public static void broadcastAction(String action, String id ) {
+		info.q37.xdhq.XDH.broadcastAction(action, id);
+	}
+
+	public static void broadcastAction(String action) {
+		broadcastAction(action, "");
 	}
 };

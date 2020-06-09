@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Claude SIMON (http://q37.info/contact/).
+	Copyright (C) 2017 Claude SIMON (http://q37.info/contact/).
 
 	This file is part of XDHq.
 
@@ -19,6 +19,13 @@
 
 package info.q37.xdhq;
 
-public enum MODE {
-	FAAS, SLFH, UNDEFINED
-};
+public class XDH_FAAS extends XDH_SHRD {
+	static public String headContent;
+	static public void launch(String headContent, info.q37.xdhq.XDH_SHRD.Callback callback ) {
+		XDH_FAAS.headContent = headContent;
+		info.q37.xdhq.dom.DOM_FAAS.launch(callback);
+	}
+	static public void broadcastAction(String action, String id) {
+		info.q37.xdhq.dom.DOM_FAAS.broadcastAction(action, id);
+	}
+}

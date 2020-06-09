@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 Claude SIMON (http://q37.info/contact/).
+	Copyright (C) 2018 Claude SIMON (http://q37.info/contact/).
 
 	This file is part of XDHq.
 
@@ -19,17 +19,20 @@
 
 package info.q37.xdhq;
 
-import info.q37.jreq.JRE;
+import info.q37.xdhq.dom.DOM_SHRD.Type;
 
-public class XDH_PROD extends XDH_SHRD {
-	static private long launcher;
-	static {
-		launcher = JRE.register( "xdhq" );
+public class ARG {
+	public Type type;
+	public String string;
+	public String[] strings;
+
+	public ARG( String string ) {
+		this.type = Type.STRING;
+		this.string = string;
 	}
-	static public Object call(int index, Object... objects) {
-		return JRE.call( launcher, index, objects );
-	}
-	static public void launch() {
-		JRE.call( launcher, 1, "53752" );
+
+	public ARG( String[] strings ) {
+		this.type = Type.STRINGS;
+		this.strings = strings;
 	}
 }

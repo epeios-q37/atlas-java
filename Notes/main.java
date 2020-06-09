@@ -39,15 +39,8 @@ class Notes extends Atlas {
 	private String viewModeElements[] = { "Pattern", "CreateButton", "DescriptionToggling", "ViewNotes" };
 	private List<Note> notes;
 
-	private static String readAsset_( String path ) {
-		String dir;
-
-		if (System.getenv("EPEIOS_SRC") == null)
-			dir = ".";
-		else
-			dir = "notes";
-
-		return readAsset( path, dir );
+	static private String readAsset_( String path )  {
+		return readAsset( path, "Notes" );
 	}
 
 	private void push(Note note, int index, XML xml) {
@@ -106,7 +99,6 @@ class Notes extends Atlas {
 		dom.setLayout("Edit." + id, readAsset_( "Note.html") );
 		dom.setContents( new HashMap<String,String> () {{ put( "Title", note.title); put("Description", note.description); }} );
 		dom.disableElements(viewModeElements);
-		dom.dressWidgets("Notes");
 		dom.focus("Title");
 	}
 
@@ -147,7 +139,7 @@ class Notes extends Atlas {
 	}
 
 	public Notes() {
-		System.out.println("Connection detected...");
+		// System.out.println("Connection detected...");
 		notes = new ArrayList<Note>();
 
 		// First must be empty as it used as buffer for the new notes.
@@ -185,14 +177,9 @@ class Notes extends Atlas {
 			System.exit(1);
 		}
 	}
-	public static void main(String args[]) throws Exception {
+	public static void main(String args[]) {
 		String dir;
 
-		if (System.getenv("EPEIOS_SRC") == null)
-			dir = ".";
-		else
-			dir = "notes";
-
-		launch(() -> new Notes(),readAsset_("Head.html"), dir, GUI.DEFAULT, args);
+		launch(() -> new Notes(),readAsset_("Head.html"), "Notes", GUI.DEFAULT, args);
 	}
 }

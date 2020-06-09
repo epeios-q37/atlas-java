@@ -19,25 +19,31 @@
 
 package info.q37.xdhq.dom;
 
-import info.q37.xdhq.XDH_PROD;
+import info.q37.xdhq.XDH_SLFH;
 import info.q37.xdhq.dom.DOM_SHRD;
 
-public class DOM_PROD extends DOM_SHRD {
+public class DOM_SLFH extends DOM_SHRD {
 	private Object core;
 
-	public DOM_PROD() {
-		core = XDH_PROD.call(2);
+	public DOM_SLFH() {
+		core = XDH_SLFH.call(2);
 	}
 
 	public void finalize() {
-		XDH_PROD.call(3, core);
+		XDH_SLFH.call(3, core);
 	}
 
 	@Override public void getAction(Event event) {
-		XDH_PROD.call(4, core, event);
+		XDH_SLFH.call(4, core, event);
 	}
 
-	@Override public Object call(String command, Type type, String[] strings, String[][] xstrings )  {
-		return XDH_PROD.call( 5, core, command, type.getValue(), strings, xstrings );
+	@Override public Object call(String command, Type type, info.q37.xdhq.ARG ...args )  {
+		return XDH_SLFH.call( 5, core, command, type.getValue(), args );
+	}
+
+	@Override public boolean isQuitting() {
+		System.out.println("Function in 'DOM_SLFH.java' to implement!!!");
+		System.exit(-1);
+		return false;
 	}
 }

@@ -20,15 +20,8 @@
 import info.q37.atlas.*;
 
 class Blank extends Atlas {
-	private static String readAsset_( String path ) {
-		String dir;
-
-		if (System.getenv("EPEIOS_SRC") == null)
-			dir = ".";
-		else
-			dir = "blank";
-
-		return readAsset( path, dir );
+	static private String readAsset_( String path )  {
+		return readAsset( path, "Blank" );
 	}
 
 	@Override
@@ -49,14 +42,9 @@ class Blank extends Atlas {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		String dir;
 
-		if (System.getenv("EPEIOS_SRC") == null)
-			dir = ".";
-		else
-			dir = "blank";
-
-		launch(() -> new Blank(), readAsset_("Head.html"), dir, GUI.DEFAULT, args);
+		launch(() -> new Blank(), readAsset_("Head.html"), "Blank", GUI.DEFAULT, args);
 	}
 }
