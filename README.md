@@ -5,7 +5,7 @@
 [![Run on Repl.it](https://repl.it/badge/github/epeios-q37/atlas-java)](https://q37.info/s/3vwk3h3n)
 [![Version 0.11](https://img.shields.io/static/v1.svg?&color=90b4ed&label=Version&message=0.11)](http://github.com/epeios-q37/atlas-java/)
 [![Stars](https://img.shields.io/github/stars/epeios-q37/atlas-java.svg?style=social)](https://github.com/epeios-q37/atlas-java/stargazers)
-[![license: MIT](https://img.shields.io/github/license/epeios-q37/atlas-java?color=yellow))](https://github.com/epeios-q37/atlas-java/blob/master/LICENSE)
+[![license: MIT](https://img.shields.io/github/license/epeios-q37/atlas-java?color=yellow)](https://github.com/epeios-q37/atlas-java/blob/master/LICENSE)
 [![Homepage](https://img.shields.io/static/v1?label=homepage&message=atlastk.org&color=ff69b4)](https://atlastk.org)
 
 *NOTA*: this toolkit is also available for:
