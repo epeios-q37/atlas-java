@@ -75,7 +75,19 @@ class Hello extends Atlas {
 
 ### Try it yourself now
 
-See the below online demonstrations section, or launch:
+#### Online, with nothing to install
+
+Thanks to [Replit](https://q37.info/s/mxmgq3qm), an [online IDE](https://q37.info/s/zzkzbdw7), you can write and run programs using the *Atlas* toolkit directly in your web browser, without having to install *Java* on your computer.
+
+To see some examples, like the following [*TodoMVC*](http://todomvc.com/) application or the above [*Hello, World!*](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) program, simply:
+-  go [here](https://q37.info/s/3vwk3h3n) (or click on the [![Run on Repl.it](https://repl.it/badge/github/epeios-q37/atlas-java)](https://q37.info/s/3vwk3h3n) badge at the top of this page),
+-  click on the green `run` button,
+-  select the demonstration you want to see,
+-  click (or scan with your smartphone) the then displayed [QR code](https://q37.info/s/3pktvrj7).
+
+[![TodoMVC](https://q37.info/download/TodoMVC.gif "The TodoMVC application made with the Atlas toolkit")](https://q37.info/s/3vwk3h3n)
+
+#### With *Java* on your computer
 
 - on *Windows* (take attention to the `;` on last line):
 ```
@@ -90,14 +102,6 @@ git clone https://github.com/epeios-q37/atlas-java
 cd atlas-java/examples/Hello
 java -cp .:../../Atlas.jar Hello
 ```
-
-## Online demonstrations
-
-Thanks to [Replit](https://q37.info/s/mxmgq3qm), an [online IDE](https://q37.info/s/zzkzbdw7), you can write and run programs using the *Atlas* toolkit directly in your web browser, without having to install *Java* on your computer.
-
-To see some examples, like the following [*TodoMVC*](http://todomvc.com/) application or the above [*Hello, World!*](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) program, simply go [here](https://q37.info/s/3vwk3h3n), click on the green `run` button, select the demonstration you want to see, and then click (or scan with your smartphone) the then displayed [QR code](https://q37.info/s/3pktvrj7).
-
-[![TodoMVC](https://q37.info/download/TodoMVC.gif "The TodoMVC application made with the Atlas toolkit")](https://q37.info/s/3vwk3h3n)
 
 ## Your turn
 
