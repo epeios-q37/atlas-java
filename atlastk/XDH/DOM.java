@@ -87,6 +87,10 @@ public class DOM {
 		return (String []) DOM.call("Execute_1", Type.STRINGS, a(script));
 	}
 
+	public void flush() {
+		DOM.call("Flush_1", Type.STRING);
+	}
+
 	public void alert(String message) {
 		DOM.call("Alert_1", Type.STRING, a(message));
 		// For the return value being 'STRING' instead of 'VOID',
@@ -101,19 +105,19 @@ public class DOM {
 		DOM.call("HandleLayout_1", Type.VOID, a(variant), a(id), a(xml.toString()), a(xslFilename));
 	}
 
-	public <XML> void prependLayout(String id, XML html) {
+	public <XML> void prependLayout(String id, XML html) {	// Deprecated!
 		handleLayout_( "Prepend", id, html, "");
 	}
 
-	public <XML> void setLayout(String id, XML html) {
+	public <XML> void setLayout(String id, XML html) {	// Deprecated!
 		handleLayout_( "Set",id, html, "");
 	}
 
-	public <XML> void appendLayout(String id, XML html) {
+	public <XML> void appendLayout(String id, XML html) {	// Deprecated!
 		handleLayout_( "Append",id, html, "");
 	}
 	   	 
-	private <XML> void handleLayoutXSL_(String variant, String id, XML xml, String xslFilename) {
+	private <XML> void handleLayoutXSL_(String variant, String id, XML xml, String xslFilename) {	// Deprecated!
 		String xslURL = xslFilename;
 
 		if ( info.q37.xdhq.XDH.isFaaS() )
@@ -122,16 +126,63 @@ public class DOM {
 		handleLayout_(variant, id, xml, xslURL);
 	}
 
-	public <XML> void prependLayoutXSL(String id, XML xml, String xslFilename) {
+	public <XML> void prependLayoutXSL(String id, XML xml, String xslFilename) {	// Deprecated!
 		handleLayoutXSL_( "Prepend",id, xml, xslFilename);
 	}
 
-	public <XML> void setLayoutXSL(String id, XML xml, String xslFilename) {
+	public <XML> void setLayoutXSL(String id, XML xml, String xslFilename) {	// Deprecated!
 		handleLayoutXSL_( "Set",id, xml, xslFilename);
 	}
 
-	public <XML> void appendLayoutXSL(String id, XML xml, String xslFilename) {
+	public <XML> void appendLayoutXSL(String id, XML xml, String xslFilename) {	// Deprecated!
 		handleLayoutXSL_( "Append",id, xml, xslFilename);
+	}
+
+	private <XML> void layout_(String variant, String id, XML xml, String xsl) {
+		if (!xsl.isEmpty() && info.q37.xdhq.XDH.isFaaS())
+			xsl = new String( "data:text/xml;base64," + java.util.Base64.getEncoder().encodeToString( info.q37.xdhq.XDH.readAsset( xsl, info.q37.xdhq.XDH.getDir() ).getBytes() ) );
+
+		DOM.call("HandleLayout_1", Type.VOID, a(variant), a(id), a(xml.toString()), a(xsl));
+	}
+
+	public <XML> void before(String id, XML xml, String xsl) {
+		layout_("beforebegin", id, xml, xsl);
+	}
+	   	 
+	public <XML> void before(String id, XML xml) {
+		before(id, xml, "");
+	}
+
+	public <XML> void begin(String id, XML xml, String xsl) {
+		layout_("afterbegin", id, xml, xsl);
+	}
+	   	 
+	public <XML> void begin(String id, XML xml) {
+		begin(id, xml, "");
+	}
+
+	public <XML> void inner(String id, XML xml, String xsl) {
+		layout_("inner", id, xml, xsl);
+	}
+	   	 
+	public <XML> void inner(String id, XML xml) {
+		inner(id, xml, "");
+	}
+
+	public <XML> void end(String id, XML xml, String xsl) {
+		layout_("beforeend", id, xml, xsl);
+	}
+	   	 
+	public <XML> void end(String id, XML xml) {
+		end(id, xml, "");
+	}
+
+	public <XML> void after(String id, XML xml, String xsl) {
+		layout_("afterend", id, xml, xsl);
+	}
+	   	 
+	public <XML> void after(String id, XML xml) {
+		after(id, xml, "");
 	}
 	   	 
 	public String[] getContents(String[] ids) {
@@ -245,5 +296,29 @@ public class DOM {
 
 	public void focus(String id) {
 		DOM.call("Focus_1", Type.VOID, a(id));
+	}
+
+	public String parent(String id) {
+		return (String) DOM.call("Parent_1", Type.STRING, a(id));
+	}
+
+	public String firstChild(String id) {
+		return (String) DOM.call("FirstChild_1", Type.STRING, a(id));
+	}
+
+	public String lastChild(String id) {
+		return (String) DOM.call("LastChild_1", Type.STRING, a(id));
+	}
+
+	public String previousSibling(String id) {
+		return (String) DOM.call("PreviousSibling_1", Type.STRING, a(id));
+	}
+
+	public String nextSibling(String id) {
+		return (String) DOM.call("NextSibling_1", Type.STRING, a(id));
+	}
+
+	public void scrollTo(String id) {
+		DOM.call("ScrollTo_1", Type.VOID, a(id));
 	}
 }
