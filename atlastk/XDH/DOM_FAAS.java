@@ -77,7 +77,7 @@ public class DOM_FAAS extends DOM_SHRD {
 	}
 
 	static private boolean isREPLit_() {
-		return "REPLit".equals(getEnv_("ATK"));
+		return "REPLIT".equals(getEnv_("ATK").toUpperCase());
 	}
 
 	static private boolean isTokenEmpty_() {
@@ -85,7 +85,7 @@ public class DOM_FAAS extends DOM_SHRD {
 	}
 
 	static {
-		String atk = getEnv_("ATK");
+		String atk = getEnv_("ATK").toUpperCase();
 
 		if ("DEV".equals(atk)) {
 			pAddr = "localhost";
@@ -94,7 +94,7 @@ public class DOM_FAAS extends DOM_SHRD {
 		} else if ("TEST".equals(atk)) {
 			cgi = "xdh_";
 			System.out.println("\tTEST mode !");
-		} else if (!atk.isEmpty() && !"REPLit".equals(atk)) {
+		} else if (!atk.isEmpty() && !"REPLIT".equals(atk) && !"NONE".equals(atk)) {
 			throw new java.lang.RuntimeException("Bad 'ATK' environment variable value : should be 'DEV' or 'TEST' !");
 		}
 
