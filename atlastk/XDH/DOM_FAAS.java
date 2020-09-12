@@ -259,6 +259,8 @@ public class DOM_FAAS extends DOM_SHRD {
 					"{res.end(\"<html><body><iframe style=\\\"border-style: none; width: 100%;height: 100%\\\" " + 
 					"src=\\\"https://atlastk.org/repl_it.php?url=" + url + "\\\"</iframe></body></html>\");}).listen(8080);";
 				Runtime.getRuntime().exec(new String[] { "/usr/bin/node", "-e", script });
+			} else if ("NONE".equals(getEnv_("ATK").toUpperCase())) {
+				// Nothing to do.
 			} else if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 				Desktop.getDesktop().browse(new URI(url));
 			} else if (Runtime.getRuntime().exec(new String[] { "which", "xdg-open" }).getInputStream().read() != -1) {
