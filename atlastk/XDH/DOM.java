@@ -196,13 +196,13 @@ public class DOM {
 	}
 
 	// Deprecated
-	public final void setContents(Map<String, String> idsAndContents) {
+	public void setContents(Map<String, String> idsAndContents) {
 		String[][] splittedIdsAndContents = split(idsAndContents);
 		DOM.call("SetContents_1", Type.VOID, a(splittedIdsAndContents[0]), a(splittedIdsAndContents[1]));
 	}
 
 	// Deprecated
-	public final void setContent(final String id, final String content) {
+	public void setContent(final String id, final String content) {
 		setContents(new HashMap<String, String>() {
 			{
 				put(id, content);
@@ -218,12 +218,12 @@ public class DOM {
 		return getValues(new String[] { id })[0];
 	}
 
-	public final void setValues(Map<String, String> idsAndValues) {
+	public void setValues(Map<String, String> idsAndValues) {
 		String[][] splittedIdsAndValues = split(idsAndValues);
 		DOM.call("SetValues_1", Type.VOID, a(splittedIdsAndValues[0]), a(splittedIdsAndValues[1]));
 	}
 
-	public final void setValue(final String id, final String value) {
+	public void setValue(final String id, final String value) {
 		setValues(new HashMap<String, String>() {
 			{
 				put(id, value);
@@ -239,12 +239,12 @@ public class DOM {
 		return getMarks(new String[] { id })[0];
 	}
 
-	public final void setMarks(Map<String, String> idsAndMarks) {
+	public void setMarks(Map<String, String> idsAndMarks) {
 		String[][] splittedIdsAndMarks = split(idsAndMarks);
 		DOM.call("SetMarks_1", Type.VOID, a(splittedIdsAndMarks[0]), a(splittedIdsAndMarks[1]));
 	}
 
-	public final void setMark(final String id, final String mark) {
+	public void setMark(final String id, final String mark) {
 		setMarks(new HashMap<String, String>() {
 			{
 				put(id, mark);
@@ -253,15 +253,15 @@ public class DOM {
 	}
 
 /*
-	public final String createElement( String name, String id ) {
+	public String createElement( String name, String id ) {
 		return (String)DOM.call( "CreateElement_1", Type.STRING, new String[]{name, id }, emptys );
 	}
 
-	public final String createElement(String name) {
+	public String createElement(String name) {
 		return createElement(name, "");
 	}
 
-	public final void insertChild( String child, String id ) {
+	public void insertChild( String child, String id ) {
 		DOM.call( "InsertChild_1", Type.VOID, new String[]{ child, id }, emptys );
 	}
 */
