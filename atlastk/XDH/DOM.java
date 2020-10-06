@@ -184,24 +184,70 @@ public class DOM {
 	public <XML> void after(String id, XML xml) {
 		after(id, xml, "");
 	}
-	   	 
+	
+	// Deprecated
 	public String[] getContents(String[] ids) {
 		return (String[]) DOM.call("GetContents_1", Type.STRINGS, a(ids));
 	}
 
+	// Deprecated
 	public String getContent(String id) {
 		return getContents(new String[] { id })[0];
 	}
 
+	// Deprecated
 	public final void setContents(Map<String, String> idsAndContents) {
 		String[][] splittedIdsAndContents = split(idsAndContents);
 		DOM.call("SetContents_1", Type.VOID, a(splittedIdsAndContents[0]), a(splittedIdsAndContents[1]));
 	}
 
+	// Deprecated
 	public final void setContent(final String id, final String content) {
 		setContents(new HashMap<String, String>() {
 			{
 				put(id, content);
+			}
+		});
+	}
+
+	public String[] getValues(String[] ids) {
+		return (String[]) DOM.call("GetValues_1", Type.STRINGS, a(ids));
+	}
+
+	public String getValue(String id) {
+		return getValues(new String[] { id })[0];
+	}
+
+	public final void setValues(Map<String, String> idsAndValues) {
+		String[][] splittedIdsAndValues = split(idsAndValues);
+		DOM.call("SetValues_1", Type.VOID, a(splittedIdsAndValues[0]), a(splittedIdsAndValues[1]));
+	}
+
+	public final void setValue(final String id, final String value) {
+		setValues(new HashMap<String, String>() {
+			{
+				put(id, value);
+			}
+		});
+	}
+
+	public String[] getMarks(String[] ids) {
+		return (String[]) DOM.call("GetMarks_1", Type.STRINGS, a(ids));
+	}
+
+	public String getMark(String id) {
+		return getMarks(new String[] { id })[0];
+	}
+
+	public final void setMarks(Map<String, String> idsAndMarks) {
+		String[][] splittedIdsAndMarks = split(idsAndMarks);
+		DOM.call("SetMarks_1", Type.VOID, a(splittedIdsAndMarks[0]), a(splittedIdsAndMarks[1]));
+	}
+
+	public final void setMark(final String id, final String mark) {
+		setMarks(new HashMap<String, String>() {
+			{
+				put(id, mark);
 			}
 		});
 	}
