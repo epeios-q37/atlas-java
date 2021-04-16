@@ -23,54 +23,52 @@
 
 ---
 
-## Quick example: the ["Hello, World!"](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) program
+## A GUI with *Java* in less then 10 minutes
 
-### Source code
+Click to see how to program this ["Hello, World!"](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) with *Java* in less then 10 minutes:
+
+[![Building a GUI in with *Java* in less then 10 minutes](https://q37.info/s/qp4z37pg.gif)](https://q37.info/s/vd9xz7jp)
+
+Same video on [*Peertube*](https://en.wikipedia.org/wiki/PeerTube): <https://q37.info/s/qs4dx4rm>.
+
+Source code:
 
 ```java
 import info.q37.atlas.*;
 
 class Hello extends Atlas {
-
- private static String body =
+ private static String BODY =
   "<fieldset>" +
-  "  <input id=\"input\" maxlength=\"20\" placeholder=\"Enter a name here\"'" +
-  "         type=\"text\" data-xdh-onevent=\"Submit\" value=\"World\"/>" +
-  "  <div style=\"display: flex; justify-content: space-around; margin: 5px auto auto auto;\">" +
-  "   <button data-xdh-onevent=\"Submit\">Submit</button>" +
-  "   <button data-xdh-onevent=\"Clear\">Clear</button>" +
-  " </div>" +
+  " <input id=\"Input\" data-xdh-onevent=\"Submit\" value=\"World\"/>" +
+  " <button data-xdh-onevent=\"Submit\">Hello</button>" +
+  " <hr/>" +
+  " <fieldset>" +
+  "  <output id=\"Output\">Greetings displayed here!</output>" +
+  " </fieldset>" +
   "</fieldset>";
 
- @Override
- public void handle(String action, String id)
- {
-  switch(action) {
-  case "": // Action label corresponding to a new session.
-   dom.inner("", body);
-   break;
-  case "Submit":
-   dom.alert("Hello, " + dom.getValue("input") + "!" );
-   break;
-  case "Clear":
-   if ( dom.confirm("Are you sure ?") )
-    dom.setValue("input", "");
-   break;
+  @Override
+  public void handle(String action, String id)
+  {
+    switch(action) {
+    case "":
+      dom.inner("", BODY);
+      break;
+    case "Submit":
+      String name = dom.getValue("Input");
+      dom.setValue("Output", "Hello, " + name + "!");
+      dom.setValue("Input", "" );
+      break;
+    }
+    dom.focus("Input");
   }
 
-  dom.focus("input");
- }
-
- public static void main(String[] args)
- {
-  launch(() -> new Hello());
- }
+  public static void main(String[] args)
+  {
+    launch(() -> new Hello());
+  }
 }
 ```
-
-### Result
-
-[![Little demonstration](https://q37.info/download/assets/Hello.gif "A basic example")](https://q37.info/s/3vwk3h3n)
 
 ### See for yourself right now - it's quick and easy!
 
@@ -102,6 +100,8 @@ git clone https://github.com/epeios-q37/atlas-java
 cd atlas-java/examples/Hello
 java -cp .:../../Atlas.jar Hello
 ```
+
+
 
 ## Your turn
 
