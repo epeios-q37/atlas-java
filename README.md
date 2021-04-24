@@ -23,9 +23,9 @@
 
 ---
 
-## A GUI with *Java* in less then 10 minutes
+## A GUI with *Java* in a couple of minutes
 
-Click to see how to program this ["Hello, World!"](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) with *Java* in less then 10 minutes:
+Click the animation to see a screencast of programming this ["Hello, World!"](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) with *Java* in a matter of minutes:
 
 [![Building a GUI in with *Java* in less then 10 minutes](https://q37.info/s/qp4z37pg.gif)](https://q37.info/s/vd9xz7jp)
 
