@@ -39,16 +39,16 @@ public abstract class Atlas implements Runnable {
 	@Override
 	public final void run() {
 		info.q37.xdhq.dom.Event event = new info.q37.xdhq.dom.Event();
-		for (;;) {
-			dom.getAction(event);
+		try {
+			for (;;) {
+				dom.getAction(event);
 
-			if (dom.isQuitting() ) {	// MUST be called after 'getAction()…',
-										// or the library will hang!
-				break;
+				if ( "".equals(event.action) && isDev() )
+					dom.debug_log();
+
+				handle(event.action, event.id);
 			}
-
-			handle(event.action, event.id );
-		}
+		} catch (info.q37.xdhq.dom.DOM_FAAS.ThreadExitingException e) {}
 		
 		// System.out.println("Quitting thread!");
 	}
@@ -96,7 +96,8 @@ public abstract class Atlas implements Runnable {
 			});
 		} catch (java.io.IOException e) {
 			e.printStackTrace();
-		}
+			System.exit(1);
+		}			
 	}
 
 	private static void launchDesktop(String dir) {
@@ -118,6 +119,7 @@ public abstract class Atlas implements Runnable {
 			});
 		} catch (java.io.IOException e) {
 			e.printStackTrace();
+			System.exit(1);
 		}
 	}
 
@@ -154,7 +156,7 @@ public abstract class Atlas implements Runnable {
 				} else if ( arg.equals( "dw" ) || arg.equals( "wd") ) {
 					gui = GUI.DESKTOP_AND_WEB;
 				} else {
-					System.out.println("Unknown gui $!");
+					System.err.println("Unknown gui !");
 					System.exit(1);
 				}
 			}
@@ -176,7 +178,7 @@ public abstract class Atlas implements Runnable {
 			launchWeb(dir);
 			break;
 		default:
-			System.out.println("Unknown gui !");
+			System.err.println("Unknown gui !");
 			System.exit(1);
 			break;
 		}

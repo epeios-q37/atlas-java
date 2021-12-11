@@ -39,28 +39,21 @@ public class DOM {
 	}
 
 	public DOM(MODE mode) {
-		try {
-			switch (mode) {
-			case FAAS:
-				DOM = new info.q37.xdhq.dom.DOM_FAAS();
-				break;
-			case SLFH:
-				DOM = new info.q37.xdhq.dom.DOM_SLFH();
-				break;
-			default:
-				throw new RuntimeException("Unknown mode !!!");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		switch (mode) {
+		case FAAS:
+			DOM = new info.q37.xdhq.dom.DOM_FAAS();
+			break;
+		case SLFH:
+			DOM = new info.q37.xdhq.dom.DOM_SLFH();
+			break;
+		default:
+			System.err.println("Unknown mode !!!");
+			System.exit(1);
 		}
 	}
 
 	public info.q37.xdhq.dom.DOM_SHRD getDOM() {
 		return DOM;
-	}
-
-	public boolean isQuitting() {
-		return DOM.isQuitting();
 	}
 
 	public void getAction(info.q37.xdhq.dom.Event event) {
@@ -102,7 +95,7 @@ public class DOM {
 	}
 
 	private <XML> void handleLayout_(String variant, String id, XML xml, String xslFilename) {
-		DOM.call("HandleLayout_1", Type.VOID, a(variant), a(id), a(xml.toString()), a(xslFilename));
+		DOM.call("HandleLayout_1", Type.STRING, a(variant), a(id), a(xml.toString()), a(xslFilename));
 	}
 
 	public <XML> void prependLayout(String id, XML html) {	// Deprecated!
@@ -142,7 +135,7 @@ public class DOM {
 		if (!xsl.isEmpty() && info.q37.xdhq.XDH.isFaaS())
 			xsl = new String( "data:text/xml;base64," + java.util.Base64.getEncoder().encodeToString( info.q37.xdhq.XDH.readAsset( xsl, info.q37.xdhq.XDH.getDir() ).getBytes() ) );
 
-		DOM.call("HandleLayout_1", Type.VOID, a(variant), a(id), a(xml.toString()), a(xsl));
+		DOM.call("HandleLayout_1", Type.STRING, a(variant), a(id), a(xml.toString()), a(xsl));
 	}
 
 	public <XML> void before(String id, XML xml, String xsl) {
@@ -366,5 +359,17 @@ public class DOM {
 
 	public void scrollTo(String id) {
 		DOM.call("ScrollTo_1", Type.VOID, a(id));
+	}
+
+	public void debug_log(boolean switcher) {
+		DOM.call("DebugLog_1", Type.VOID, a(switcher ? "true" : "false"));
+	}
+
+	public void debug_log() {
+			debug_log(true);
+	}
+
+	public void log(String message) {
+		DOM.call("Log_1", Type.VOID, a(message));
 	}
 }
