@@ -4,7 +4,7 @@
 - does **not** concern the native code.
 
 ## 2022-07-01
-- *Java*:
+- *Java*, *Perl*, *Ruby*:
   -  implementing *FaaS* protocol v1,
   -  switching to v0.13.1,
 - *Node*: switching to v0.13.3;
