@@ -248,6 +248,7 @@ class TodoMVC extends Atlas {
 		switch (action) {
 		case "":
 			dom.inner("", readAsset_("Main.html"));
+			dom.enableElement("XDHFullWidth");
 			dom.focus("Input");
 			dom.disableElements(new String[] { "HideActive", "HideCompleted" });
 			displayTodos(dom);

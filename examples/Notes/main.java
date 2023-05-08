@@ -159,6 +159,7 @@ class Notes extends Atlas {
 	public void handle(String action, String id ) {
 		if ( action.equals( "" ) ) {
 			dom.inner("", readAsset_( "Main.html") );
+			dom.enableElement("XDHFullWidth");
 			displayList( dom );
 		} else if ( action.equals( "ToggleDescriptions" ) ) {
 			hideDescriptions = "true".equals(dom.getValue(id));
